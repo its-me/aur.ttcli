@@ -1,0 +1,29 @@
+name: Publish to AUR
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_message:
+        description: "Commit message (optional)"
+        required: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: AUR
+      url: https://aur.archlinux.org/packages/ttcli
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Publish
+        uses: its-me/action.aur.publish@v0
+        with:
+          ssh-key: ${{ secrets.AUR_SSH_KEY }}
+          git-user-name: Sergey Kanafyev
+          git-user-email: sergeykanafyev@gmail.com
+          commit-message: ${{ github.event.inputs.commit_message }}
